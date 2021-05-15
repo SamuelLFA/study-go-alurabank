@@ -3,15 +3,27 @@ package main
 import (
 	"fmt"
 
+	"github.com/samuellfa/study-go-alurabank/clientes"
 	"github.com/samuellfa/study-go-alurabank/contas"
 )
 
+func PagarBoleto(conta verificarConta, valorDoBoleto float64) {
+	conta.Sacar(valorDoBoleto)
+}
+
+type verificarConta interface {
+	Sacar(valor float64) bool
+}
+
 func main() {
-	conta := contas.ContaCorrente{Titular: "Samuel", NumeroAgencia: 123, NumeroConta: 112233, Saldo: 200.0}
-	conta2 := contas.ContaCorrente{Titular: "Douglas", NumeroAgencia: 123, NumeroConta: 112233, Saldo: 300.0}
+	titular := clientes.Titular{Nome: "Samuel", CFF: "12715497601", Profissao: "Desenvolvedor"}
+	conta := contas.ContaPoupanca{Titular: titular, NumeroAgencia: 123, Operacao: 13, NumeroConta: 112233}
+	conta2 := contas.ContaCorrente{Titular: titular, NumeroAgencia: 123, NumeroConta: 112233}
 
-	conta.Transferir(100, &conta2)
+	conta.Depositar(200)
 
-	fmt.Println(conta)
-	fmt.Println(conta2)
+	PagarBoleto(&conta, 60)
+
+	fmt.Println(conta.ObterSaldo())
+	fmt.Println(conta2.ObterSaldo())
 }
